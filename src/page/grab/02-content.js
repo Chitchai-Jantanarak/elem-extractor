@@ -103,8 +103,8 @@ function getSafeAttributes(el) {
   return attrs;
 }
 
-// Why: guest pages control aria-labelledby; avoid regex splitting huge
-// attributes while extracting grab payload accessibility metadata.
+// avoid regex splitting huge attributes while extracting 
+// grab payload accessibility metadata.
 function getAriaLabelledByIds(value) {
   var ids = [];
   var tokenStart = -1;

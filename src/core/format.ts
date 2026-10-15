@@ -8,8 +8,6 @@ export interface GrabFormatter {
 }
 
 function inlineCode(value: string): string {
-  // Why: pick a backtick run longer than any inside the value so it can't
-  // break out of the inline code span.
   const longest = Math.max(0, ...(value.match(/`+/g) ?? []).map((run) => run.length))
   const ticks = '`'.repeat(longest + 1)
   const pad = value.startsWith('`') || value.endsWith('`') ? ' ' : ''
@@ -21,7 +19,6 @@ function quote(value: string): string {
 }
 
 function fence(value: string, lang: string): string {
-  // Same idea as inlineCode: the fence must be longer than any backtick run inside.
   const longest = Math.max(2, ...(value.match(/`+/g) ?? []).map((run) => run.length))
   const ticks = '`'.repeat(longest + 1)
   return `${ticks}${lang}\n${value}\n${ticks}`

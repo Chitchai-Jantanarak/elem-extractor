@@ -20,9 +20,6 @@ const SAFE_GRAB_URL_PROTOCOLS = new Set(['http:', 'https:', 'file:'])
  * Returns null if the payload is structurally invalid (missing required fields).
  */
 export function clampGrabPayload(raw: unknown): GrabPayload | null {
-  // Why: the page payload is completely untrusted. A compromised or
-  // malfunctioning guest could return anything. Validate structural shape
-  // before accessing nested properties to avoid unhandled TypeErrors.
   if (!raw || typeof raw !== 'object') {
     return null
   }
@@ -55,16 +52,11 @@ export function clampGrabPayload(raw: unknown): GrabPayload | null {
   const safeNum = (n: unknown, fallback = 0): number =>
     typeof n === 'number' && Number.isFinite(n) ? n : fallback
 
-  // Why: mirror the page-side secret detection on the extension side so a
-  // compromised page cannot smuggle secret-bearing values through attributes
-  // or URLs. This is the defense-in-depth layer.
   const containsSecret = (val: string): boolean => {
     const lower = val.toLowerCase()
     return GRAB_SECRET_PATTERNS.some((p) => lower.includes(p))
   }
 
-  // Why: mirror the page-side URL sanitization. Strip query strings and
-  // fragments to prevent token leakage even if the page is compromised.
   const sanitizeUrl = (rawUrl: unknown): string => {
     const str = typeof rawUrl === 'string' ? rawUrl : ''
     if (!str) {
@@ -82,15 +74,10 @@ export function clampGrabPayload(raw: unknown): GrabPayload | null {
       url.hash = ''
       return url.toString()
     } catch {
-      // Why: returning the raw string on parse failure could preserve
-      // javascript: URIs or other non-http schemes. Return empty.
       return ''
     }
   }
 
-  // Why: re-filter attributes on the extension side so a compromised page cannot
-  // smuggle unsafe attribute names (e.g., event handlers) or secret-bearing
-  // values into the payload that we hand to the user.
   const safeAttributes = (attrs: unknown): Record<string, string> => {
     if (!attrs || typeof attrs !== 'object') {
       return {}
@@ -155,8 +142,6 @@ export function clampGrabPayload(raw: unknown): GrabPayload | null {
 
   return {
     page: {
-      // Why: re-sanitize the URL extension-side so a compromised page cannot
-      // pass through query strings containing tokens or secrets.
       sanitizedUrl: sanitizeUrl(page.sanitizedUrl),
       title: safeStr(page.title, 500),
       viewportWidth: safeNum(page.viewportWidth),

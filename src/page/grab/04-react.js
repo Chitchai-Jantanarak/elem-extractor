@@ -156,7 +156,3 @@ function extractPayload(el) {
 }
 
 // --- Overlay UI ---
-// Why: the host element is a full-viewport overlay with pointer-events:all
-// so it acts as a click catcher. This prevents the page from receiving the
-// selection click. The overlay uses elementFromPoint (with itself temporarily
-// hidden) to identify the element underneath the pointer.

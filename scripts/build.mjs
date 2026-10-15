@@ -18,9 +18,6 @@ const common = {
   bundle: true,
   format: 'esm',
   target: 'chrome116',
-  // Why no minify / keepNames: page functions are shipped with
-  // Function.prototype.toString, so their bodies must stay self-contained.
-  // keepNames would inject a __name() helper that doesn't exist in the page.
   minify: false,
   sourcemap: 'linked',
   logLevel: 'info'

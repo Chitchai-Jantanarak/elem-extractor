@@ -28,8 +28,6 @@ export async function awaitSelection(timeoutMs: number): Promise<RawSelectionRes
   const grab = (window as unknown as { __elemGrab?: Grab }).__elemGrab
   if (!grab || !grab.host) return { kind: 'error', reason: 'picker is not armed' }
 
-  // Why: a previous wait can still be pending if the service worker restarted
-  // and lost track of it. Settle it quietly so only one set of listeners exists.
   if (typeof grab.cancelAwait === 'function') {
     try {
       grab.cancelAwait()
@@ -38,9 +36,6 @@ export async function awaitSelection(timeoutMs: number): Promise<RawSelectionRes
     }
   }
 
-  // Why `return await` inside an async function: the result handed to
-  // executeScript is then the engine's own promise, even on pages (Angular
-  // Zone.js) that replace window.Promise with a look-alike.
   return await new Promise<RawSelectionResult>((resolve) => {
     const host = grab.host
     let settled = false
@@ -150,8 +145,6 @@ export async function setGrabOverlayVisible(visible: boolean): Promise<boolean> 
   grab.host.style.display = visible ? '' : 'none'
   if (!visible) {
     await new Promise<void>((resolve) => {
-      // Two frames: one to apply the style, one to paint it. The timeout
-      // covers tabs where requestAnimationFrame is throttled.
       const done = setTimeout(resolve, 150)
       requestAnimationFrame(() =>
         requestAnimationFrame(() => {

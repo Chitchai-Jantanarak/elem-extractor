@@ -18,8 +18,5 @@ export function buildGrabScript() {
   const body = listGrabFragments()
     .map((file) => readFileSync(file, 'utf8'))
     .join('\n')
-  // Why: the IIFE keeps every helper private; the only global it leaves
-  // behind is window.__elemGrab. The trailing `true` is the value
-  // chrome.scripting.executeScript reports back.
   return `(function() {\n'use strict';\n\n${body}\nreturn true;\n})();\n`
 }

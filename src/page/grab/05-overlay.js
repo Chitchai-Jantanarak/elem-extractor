@@ -16,18 +16,15 @@ document.documentElement.appendChild(host);
 
 var shadow = host.attachShadow({ mode: 'closed' });
 
-// Visual container for highlight/label — pointer-events:none so clicks go to host
+// Visual container for highlight/label — pointer-events:none
 var overlay = document.createElement('div');
 overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:2147483647;';
 shadow.appendChild(overlay);
 
-// Why: the highlight uses a white border with a dark outer shadow so it
-// reads well on both light and dark page backgrounds.
 var highlightBox = document.createElement('div');
 highlightBox.style.cssText = 'position:fixed;border:2px solid rgba(255,255,255,0.9);border-radius:3px;pointer-events:none;transition:all 0.05s ease-out;display:none;background:rgba(255,255,255,0.08);box-shadow:0 0 0 1px rgba(0,0,0,0.3),0 2px 8px rgba(0,0,0,0.15);';
 overlay.appendChild(highlightBox);
 
-// Hover label — dark neutral pill
 var hoverLabel = document.createElement('div');
 hoverLabel.style.cssText = 'position:fixed;padding:3px 8px;background:rgba(30,30,30,0.92);color:#e5e5e5;font:11px/1.4 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;border-radius:4px;pointer-events:none;white-space:nowrap;display:none;max-width:300px;overflow:hidden;text-overflow:ellipsis;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
 overlay.appendChild(hoverLabel);
@@ -82,8 +79,6 @@ function onPointerMove(e) {
   }
 }
 
-// Why: mousemove on the host (not document) because the host is the
-// full-viewport click catcher that receives all pointer events.
 host.addEventListener('mousemove', onPointerMove);
 
 var selectedAttribute = "data-elem-grab-selected";
@@ -130,20 +125,12 @@ window.__elemGrab = {
   host: host,
   extractPayload: extractPayload,
   getCurrentElement: function() { return currentEl; },
-  // Why: freeze the highlight so the selected element stays outlined while
-  // the renderer shows the copy menu. Disabling pointer-events on the host
-  // lets the cursor return to normal and prevents the crosshair from showing
-  // over the dropdown menu's area in the webview.
   freezeHighlight: function(selectionId) {
     host.removeEventListener('mousemove', onPointerMove);
     host.style.pointerEvents = 'none';
     host.style.cursor = 'default';
-    // Why: the outline must follow the element after the click — page and inner-box
-    // scroll (capture), resize/zoom and the element's own size changes.
     selectedEl = currentEl;
     if (!selectedEl) return;
-    // Why: the isolated-world viewport bridge finds the selection by this marker; it
-    // cannot see this world's objects, and the page must not see the bridge's token.
     previousSelectedValue = selectedEl.getAttribute(selectedAttribute);
     selectedValue = selectionId;
     selectedEl.setAttribute(selectedAttribute, selectionId);

@@ -5,7 +5,7 @@ selector, HTML, computed styles, accessibility info, nearby text, React
 component names and source file (on React dev builds), plus a cropped
 screenshot. Paste it straight into Claude Code or any other coding agent.
 
-> [!NOTE]
+> [!IMPORTANT]
 > This project is **inspired by and partly adapted from [Orca](https://github.com/stablyai/orca)'s
 > "Design Mode" (element grab)**, by Lovecast Inc., used under the MIT License.
 > The page-side extraction scripts, payload types and payload validation were
@@ -69,7 +69,7 @@ in the page and again in the extension, which never trusts the page's data.
 
 ### Limits
 
-- Screenshots cover only the visible viewport (that's what Chrome can capture).
+- Screenshots cover only the *visible viewport* (that's what Chrome can capture).
 - Elements inside iframes can't be picked yet.
 - `source:` needs a React dev build that still sets `_debugSource` (React 18
   and earlier). React 19 and production builds give component names at most.

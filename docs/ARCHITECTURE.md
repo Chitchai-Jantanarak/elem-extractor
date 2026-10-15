@@ -9,14 +9,14 @@ in a fork without touching the rest.
 │                     extractPayload()  ← Orca       │
 │ awaitSelection()    one click / Esc / timeout      │
 └───────────▲──────────────────────────┬────────────┘
-            │ chrome.scripting          │ raw payload (untrusted)
+            │ chrome.scripting         │ raw payload (untrusted)
 ┌───────────┴──────────────────────────▼────────────┐
-│ background service worker                          │
-│   GrabController  ── ports ──▶ PageDriver           │
-│        │                       ScreenCapturer       │
-│        │ clampGrabPayload      SessionStore         │
-│        │ cropScreenshot        StatusIndicator      │
-│        └──────────────────────▶ GrabSink[]          │
+│ background service worker                         │
+│   GrabController  ── ports ──▶ PageDriver         │
+│        │                       ScreenCapturer      │
+│        │ clampGrabPayload      SessionStore        │
+│        │ cropScreenshot        StatusIndicator     │
+│        └──────────────────────▶ GrabSink[]        │
 └────────────────────────────────────┬──────────────┘
                                      │ ClipboardSink → writeToClipboard()
                                      ▼ (page, ISOLATED world)

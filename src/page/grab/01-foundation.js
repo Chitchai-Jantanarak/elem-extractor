@@ -90,8 +90,6 @@ function sanitizeUrl(url) {
     u.hash = '';
     return u.toString();
   } catch (e) {
-    // Why: returning the raw URL on parse failure could preserve javascript:
-    // URIs or other non-http schemes. Return empty string instead.
     return '';
   }
 }
