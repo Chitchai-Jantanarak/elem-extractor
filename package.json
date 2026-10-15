@@ -1,0 +1,48 @@
+{
+  "name": "elem-extractor",
+  "version": "0.1.0",
+  "description": "Pick any element on a web page and copy agent-ready context (selector, HTML, styles, a11y, React source, screenshot) to the clipboard.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm test && npm run build",
+    "e2e": "node e2e/run.mjs"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.0",
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
+    "jsdom": "^26.1.0",
+    "playwright": "^1.56.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/core/index.ts",
+      "import": "./dist/lib/core/index.js"
+    },
+    "./page/grab.js": "./dist/lib/page/grab.js",
+    "./page/selection": "./dist/lib/page/selection.js",
+    "./page/clipboard": "./dist/lib/page/clipboard.js"
+  },
+  "files": [
+    "dist/lib",
+    "src/core",
+    "src/page",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chitchai-jantanarak/elem-extractor"
+  }
+}
